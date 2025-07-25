@@ -1,0 +1,75 @@
+{
+    "clientRequestToken": "0d063076-185f-4ada-b351-2b0c755b17c9",
+    "evaluationConfig": {
+        "automated": {
+            "customMetricConfig": {
+                "customMetrics": [
+                    {
+                        "customMetricDefinition": {
+                            "instructions": "You are an expert evaluator for support case classification systems. Your task is to compare a model's classification response with the correct reference classification.\n\nEvaluation Instructions:\n1. Examine the original customer support prompt to understand the context\n2. Compare the MODEL RESPONSE classification with the REFERENCE RESPONSE classification\n3. Assign a score based on exact match criteria:\n   - Score 1: Perfect exact match (identical text, spacing, punctuation, and case)   \n   - Score 0: Any difference, no matter how minor\n\nScoring Criteria:\n- The classifications must be character-for-character identical\n- Case sensitivity matters (\"Billing\" ≠ \"billing\")\n- Spacing and punctuation must match exactly\n- No partial credit for similar or close classifications\n\nContext:\nOriginal Support Query: {{prompt}}\nModel Classification: {{prediction}}\nReference Classification: {{ground_truth}}",
+                            "name": "issue_classification_accuracy",
+                            "ratingScale": [
+                                {
+                                    "definition": "no match (the score is 0 if there is no match)",
+                                    "value": {
+                                        "floatValue": 0
+                                    }
+                                },
+                                {
+                                    "definition": "match (the score is 1 , if its a match)",
+                                    "value": {
+                                        "floatValue": 1
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "evaluatorModelConfig": {
+                    "bedrockEvaluatorModels": [
+                        {
+                            "modelIdentifier": "arn:aws:bedrock:us-east-1:036002855796:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+                        }
+                    ]
+                }
+            },
+            "datasetMetricConfigs": [
+                {
+                    "dataset": {
+                        "datasetLocation": {
+                            "s3Uri": "s3://eval-dataset-036002855796/sample_support_cases.jsonl"
+                        },
+                        "name": "Dataset"
+                    },
+                    "metricNames": [
+                        "issue_classification_accuracy"
+                    ],
+                    "taskType": "General"
+                }
+            ],
+            "evaluatorModelConfig": {
+                "bedrockEvaluatorModels": [
+                    {
+                        "modelIdentifier": "arn:aws:bedrock:us-east-1:036002855796:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+                    }
+                ]
+            }
+        }
+    },
+    "evaluationContext": "Model",
+    "inferenceConfig": {
+        "models": [
+            {
+                "bedrockModel": {
+                    "inferenceParams": "{\"inferenceConfig\":{\"maxTokens\":512,\"temperature\":0.5,\"topP\":0.9},\"additionalModelRequestFields\":{}}",
+                    "modelIdentifier": "meta.llama3-70b-instruct-v1:0"
+                }
+            }
+        ]
+    },
+    "jobName": "evaluation-job-quick-start-20250725200416",
+    "outputDataConfig": {
+        "s3Uri": "s3://eval-dataset-036002855796/output/"
+    },
+    "roleArn": "arn:aws:iam::036002855796:role/service-role/Amazon-Bedrock-IAM-Role-20250725T162053"
+}
