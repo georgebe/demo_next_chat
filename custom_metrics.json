@@ -1,0 +1,53 @@
+json
+{
+  "name": "L1_Classification_Accuracy",
+  "instructions": "You are a classification accuracy evaluator specializing in hierarchical support ticket categorization.\n\nYour task is to evaluate the accuracy of L1 (first level) classification by comparing the ground truth classification with the model's predicted classification.\n\nBoth the ground truth and model response follow the hierarchical format: \"L1 > L2 > L3\" where levels are separated by \" > \". You need to extract and compare only the L1 (first level) components.\n\nEvaluation Rules:\n1. Extract the L1 component from both ground truth and model response\n2. Ignore leading/trailing whitespace and newline characters (\\r, \\n)\n3. Perform exact string matching (case-sensitive)\n4. If L1 components match exactly: score = 1\n5. If L1 components do not match: score = 0\n\nExamples:\n- Ground truth: \"Accounting > Payments > Credit Card\" vs Response: \"Accounting > Billing > Setup\" → L1 match: \"Accounting\" = \"Accounting\" → Score: 1\n- Ground truth: \"Technical > Software > Bug\" vs Response: \"Billing > Software > Bug\" → L1 match: \"Technical\" ≠ \"Billing\" → Score: 0\n\nProvide only the numerical score (0 or 1) based on L1 classification accuracy.\n\nGround Truth: {{ground_truth}}\nModel Response: {{prediction}}",
+  "ratingScale": [
+    {
+      "value": "0",
+      "description": "No match - L1 classification is incorrect"
+    },
+    {
+      "value": "1", 
+      "description": "Match - L1 classification is correct"
+    }
+  ]
+}
+
+
+## **Custom Metric 2: L2_Classification_Accuracy**
+
+json
+{
+  "name": "L2_Classification_Accuracy", 
+  "instructions": "You are a classification accuracy evaluator specializing in hierarchical support ticket categorization.\n\nYour task is to evaluate the accuracy of L2 (second level) classification by comparing the ground truth classification with the model's predicted classification.\n\nBoth the ground truth and model response follow the hierarchical format: \"L1 > L2 > L3\" where levels are separated by \" > \". You need to extract and compare only the L2 (second level) components.\n\nEvaluation Rules:\n1. Extract the L2 component from both ground truth and model response (if present)\n2. Ignore leading/trailing whitespace and newline characters (\\r, \\n)\n3. Handle the following cases:\n   - If both ground truth and response have L2: perform exact string matching (case-sensitive)\n   - If both ground truth and response lack L2 (only have L1): score = 1 (not applicable case)\n   - If one has L2 and the other doesn't: score = 0\n   - If both have L2 but they don't match exactly: score = 0\n   - If both have L2 and they match exactly: score = 1\n\nExamples:\n- Ground truth: \"Accounting > Payments > Credit Card\" vs Response: \"Accounting > Payments > Setup\" → L2 match: \"Payments\" = \"Payments\" → Score: 1\n- Ground truth: \"Accounting > Payments\" vs Response: \"Accounting > Billing\" → L2 match: \"Payments\" ≠ \"Billing\" → Score: 0\n- Ground truth: \"Accounting\" vs Response: \"Accounting\" → Both lack L2 → Score: 1\n- Ground truth: \"Accounting > Payments\" vs Response: \"Accounting\" → One has L2, other doesn't → Score: 0\n\nProvide only the numerical score (0 or 1) based on L2 classification accuracy.\n\nGround Truth: {{ground_truth}}\nModel Response: {{prediction}}",
+  "ratingScale": [
+    {
+      "value": "0",
+      "description": "No match - L2 classification is incorrect or missing when expected"
+    },
+    {
+      "value": "1",
+      "description": "Match - L2 classification is correct or not applicable in both ground truth and response"
+    }
+  ]
+}
+
+
+## **Custom Metric 3: L3_Classification_Accuracy**
+
+json
+{
+  "name": "L3_Classification_Accuracy",
+  "instructions": "You are a classification accuracy evaluator specializing in hierarchical support ticket categorization.\n\nYour task is to evaluate the accuracy of L3 (third level) classification by comparing the ground truth classification with the model's predicted classification.\n\nBoth the ground truth and model response follow the hierarchical format: \"L1 > L2 > L3\" where levels are separated by \" > \". You need to extract and compare only the L3 (third level) components.\n\nEvaluation Rules:\n1. Extract the L3 component from both ground truth and model response (if present)\n2. Ignore leading/trailing whitespace and newline characters (\\r, \\n)\n3. Handle the following cases:\n   - If both ground truth and response have L3: perform exact string matching (case-sensitive)\n   - If both ground truth and response lack L3 (only have L1 or L1>L2): score = 1 (not applicable case)\n   - If one has L3 and the other doesn't: score = 0\n   - If both have L3 but they don't match exactly: score = 0\n   - If both have L3 and they match exactly: score = 1\n\nExamples:\n- Ground truth: \"Accounting > Payments > Credit Card\" vs Response: \"Accounting > Payments > Credit Card\" → L3 match: \"Credit Card\" = \"Credit Card\" → Score: 1\n- Ground truth: \"Accounting > Payments > Credit Card\" vs Response: \"Accounting > Payments > Debit Card\" → L3 match: \"Credit Card\" ≠ \"Debit Card\" → Score: 0\n- Ground truth: \"Accounting > Payments\" vs Response: \"Accounting > Payments\" → Both lack L3 → Score: 1\n- Ground truth: \"Accounting > Payments > Credit Card\" vs Response: \"Accounting > Payments\" → One has L3, other doesn't → Score: 0\n- Ground truth: \"Accounting\" vs Response: \"Accounting\" → Both lack L3 → Score: 1\n\nProvide only the numerical score (0 or 1) based on L3 classification accuracy.\n\nGround Truth: {{ground_truth}}\nModel Response: {{prediction}}",
+  "ratingScale": [
+    {
+      "value": "0", 
+      "description": "No match - L3 classification is incorrect or missing when expected"
+    },
+    {
+      "value": "1",
+      "description": "Match - L3 classification is correct or not applicable in both ground truth and response"
+    }
+  ]
+}
